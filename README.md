@@ -6,9 +6,12 @@ Die Aktuelle version sollte alle Tokens von Odin Highlihgten können.
 
 This tmLanguage file provides highlighting for Odin which is a project on hmh.
 
-Odin
 
-Link: https://github.com/odin-lang/Odin
+Links: 
+
+https://github.com/odin-lang/Odin
+
+https://odin.handmade.network/
 
 # 0.1
 Add textmate grammar to highlight the language
