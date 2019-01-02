@@ -1,6 +1,6 @@
 ## DE
 Syntax Highlighting für Odin für Textmate und andere die tmLanguage files akzeptieren. 
-Die Aktuelle version sollte alle Tokens von Odin Highlihgten können.
+Die Aktuelle version sollte alle Tokens von Odin highlighten können.
 
 ## EN
 
