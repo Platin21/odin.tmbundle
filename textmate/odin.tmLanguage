@@ -12,6 +12,10 @@
 	<array>
 		<dict>
 			<key>include</key>
+			<string>#len</string>
+		</dict>
+		<dict>
+			<key>include</key>
 			<string>#compiler_keywords</string>
 		</dict>
 		<dict>
@@ -36,6 +40,10 @@
 		</dict>
 		<dict>
 			<key>include</key>
+			<string>#using</string>
+		</dict>
+		<dict>
+			<key>include</key>
 			<string>#keywords</string>
 		</dict>
 		<dict>
@@ -44,11 +52,11 @@
 		</dict>
 		<dict>
 			<key>include</key>
-			<string>#import</string>
+			<string>#foreign_import</string>
 		</dict>
 		<dict>
 			<key>include</key>
-			<string>#foreign_import</string>
+			<string>#import</string>
 		</dict>
 		<dict>
 			<key>include</key>
@@ -93,6 +101,14 @@
 		<dict>
 			<key>include</key>
 			<string>#variable</string>
+		</dict>
+		<dict>
+			<key>include</key>
+			<string>#string</string>
+		</dict>
+		<dict>
+			<key>include</key>
+			<string>#string_char</string>
 		</dict>
 	</array>
 	<key>repository</key>
@@ -423,7 +439,7 @@
 		<key>data_types</key>
 		<dict>
 			<key>match</key>
-			<string>\b(\[\])*(bool|b8|b16|b32|b64|uint|u8|u16|u32|u64|uintptr|int|i8|i16|i32|i64|f32|f64|complex64|complex128|rune|string|cstring|rawptr|typeid|any)\b</string>
+			<string>\b(\[\])*(bool|b8|b16|b32|b64|uint|uintptr|int|(u|i)8(le|be)*|(u|i)16(le|be)*|(u|i)32(le|be)*|(u|i)64(le|be)*|(u|i)128(le|be)*|f32|f64|complex64|complex128|rune|string|cstring|rawptr|typeid|any)\b</string>
 			<key>name</key>
 			<string>storage.type.all.odin</string>
 		</dict>
@@ -606,7 +622,7 @@
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>(foreign)\s+(import)\s+(\w+)\s*(\"(([^\t ]+)(:))*([^\t ]+)\")</string>
+			<string>(foreign)\s+(import)\s+(\w+)*\s*(\"(([^\t ]+)(:))*([^\t ]+)\")</string>
 		</dict>
 		<key>function_name_head</key>
 		<dict>
@@ -662,14 +678,21 @@
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>(import)\s+(\"((\w+)\s*:\s*)*\w+\")</string>
+			<string>(import)\s+(\"((\w+)\s*:\s*)*([^\n ]+)\")</string>
 		</dict>
 		<key>keywords</key>
 		<dict>
 			<key>match</key>
-			<string>\b(return|do|while|if|defer|in)\b</string>
+			<string>\b(return|do|if|defer|in|export|when|for|switch|notin|inline|no_inline|size_of|align_of|type_of|break|case|continue|fallthrough)\b</string>
 			<key>name</key>
 			<string>keyword.control.odin</string>
+		</dict>
+		<key>len</key>
+		<dict>
+			<key>match</key>
+			<string>len</string>
+			<key>name</key>
+			<string>support.function.string_len.odin</string>
 		</dict>
 		<key>math_operator</key>
 		<dict>
@@ -699,6 +722,10 @@
 				<dict>
 					<key>include</key>
 					<string>#modifier_calling_convention</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#modifier_private</string>
 				</dict>
 			</array>
 		</dict>
@@ -911,6 +938,18 @@
 			<key>match</key>
 			<string>(link_prefix)\s*\=\s*(\"(.*)\")</string>
 		</dict>
+		<key>modifier_private</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>match</key>
+					<string>private</string>
+					<key>name</key>
+					<string>storage.modifier.call.c.odin</string>
+				</dict>
+			</array>
+		</dict>
 		<key>number</key>
 		<dict>
 			<key>patterns</key>
@@ -1025,6 +1064,24 @@
 				</dict>
 			</array>
 		</dict>
+		<key>string</key>
+		<dict>
+			<key>begin</key>
+			<string>"</string>
+			<key>end</key>
+			<string>"</string>
+			<key>name</key>
+			<string>string.quoted.double.constant.odin</string>
+		</dict>
+		<key>string_char</key>
+		<dict>
+			<key>begin</key>
+			<string>'</string>
+			<key>end</key>
+			<string>'</string>
+			<key>name</key>
+			<string>string.quoted.single.constant.odin</string>
+		</dict>
 		<key>struct</key>
 		<dict>
 			<key>begin</key>
@@ -1053,7 +1110,7 @@
 				</dict>
 			</dict>
 			<key>end</key>
-			<string>}(;)+</string>
+			<string>}(;)*</string>
 			<key>patterns</key>
 			<array>
 				<dict>
@@ -1105,7 +1162,7 @@
 				</dict>
 			</dict>
 			<key>end</key>
-			<string>}(;)+</string>
+			<string>}(;)*</string>
 			<key>patterns</key>
 			<array>
 				<dict>
@@ -1122,6 +1179,29 @@
 				</dict>
 			</array>
 		</dict>
+		<key>using</key>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.control.using.odin</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>entity.name.section.package.odin</string>
+				</dict>
+				<key>4</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.operator.scolon.odin</string>
+				</dict>
+			</dict>
+			<key>match</key>
+			<string>(using)([\n ]+)([^\n ]+)(;)</string>
+		</dict>
 		<key>variable</key>
 		<dict>
 			<key>captures</key>
@@ -1131,19 +1211,24 @@
 					<key>name</key>
 					<string>variable.other.decl.odin</string>
 				</dict>
-				<key>3</key>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>variable.other.decl.odin</string>
+				</dict>
+				<key>6</key>
 				<dict>
 					<key>name</key>
 					<string>storage.type.odin</string>
 				</dict>
-				<key>4</key>
+				<key>7</key>
 				<dict>
 					<key>name</key>
 					<string>keyword.operator.pointer.odin</string>
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>(\w+)\s*(:)\s*((\^)*\w+)</string>
+			<string>(((\w+)\s*,\s*)*(\w+)\s*)(:)\s*((\^)*\w+)</string>
 		</dict>
 	</dict>
 	<key>scope</key>
