@@ -1,0 +1,25 @@
+{
+    "name": "odin-platin21",
+    "displayName": "odin-platin21",
+    "description": "Provides highlighting for odin in VSCode style is consistent with sublime",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.35.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "odin",
+            "aliases": ["Odin", "odin"],
+            "extensions": [".odin"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "odin",
+            "scopeName": "source.odin",
+            "path": "./syntaxes/odin.tmLanguage"
+        }]
+    }
+}
