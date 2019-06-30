@@ -15,3 +15,6 @@ https://odin.handmade.network/
 
 # 0.1
 Add textmate grammar to highlight the language
+
+# 0.2
+Add vscode and sublime to grammar to highlight the language
