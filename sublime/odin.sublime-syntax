@@ -112,14 +112,14 @@ contexts:
       captures:
         1: constant.other.number.odin
         2: keyword.operator.bound.odin
-        4: storage.modifier.uniqueness.odin
+        4: keyword.other.uniqueness.odin
         5: constant.other.constant.odin
   constant_number:
     - match: '(\w+)\s*(::)\s*((distinct|opaque)\s+){0,1}((0(o)[0-8]+)|(0(x)[0-9A-Fa-f]*)|(([1-9]+[0-9]*)|(0)))(;)+'
       captures:
         1: constant.other.number.odin
         2: keyword.operator.bound.odin
-        4: storage.modifier.uniqueness.odin
+        4: keyword.other.uniqueness.odin
         5: constant.numeric.odin
         6: constant.numeric.odin
         7: keyword.operator.hex.odin
@@ -129,16 +129,17 @@ contexts:
       captures:
         1: constant.other.string.odin
         2: keyword.operator.bound.odin
-        4: storage.modifier.uniqueness.odin
+        4: keyword.other.uniqueness.odin
         5: string.quoted.double.constant.odin
   constant_type:
-    - match: '(\w*)\s*(::)\s*((distinct|opaque)\s*){0,1}(#type)*\s+(proc)*'
+    - match: '(\w*)\s*(::)\s*((distinct|opaque)\s*){0,1}(#type)*\s+(proc)*(\w+)*(;)*'
       captures:
         1: constant.other.string.odin
         2: keyword.operator.bound.odin
-        3: storage.modifier.uniqueness.odin
+        3: keyword.other.uniqueness.odin
         5: keyword.other.type.odin
         6: storage.type.proc.odin
+        7: storage.type.odin
   constants_language:
     - match: \b(false|true|nil)\b
       scope: constant.language.odin
@@ -147,28 +148,35 @@ contexts:
       captures:
         1: constant.other.any.odin
         2: keyword.operator.bound.odin
-        3: storage.modifier.uniquness.odin
+        3: keyword.other.uniqueness.odin
   data_types:
     - match: '\b(\[\])*(bool|b8|b16|b32|b64|uint|uintptr|int|(u|i)8(le|be)*|(u|i)16(le|be)*|(u|i)32(le|be)*|(u|i)64(le|be)*|(u|i)128(le|be)*|f32|f64|complex64|complex128|rune|string|cstring|rawptr|typeid|any)\b'
       scope: storage.type.all.odin
   enum:
-    - match: '((\w+))\s*(::)\s*(enum)\s*(\w*)\s*\{'
+    - match: '(\w+)\s*(::)\s*(enum)\s*(\w*)\s*(\{)*'
       captures:
-        2: entity.name.type.enum.odin
+        1: entity.name.function.odin
+        2: keyword.operator.bound.odin
         3: keyword.operator.bound.odin
         4: storage.type.enum.odin
-        5: storage.type.any.odin
+        6: storage.type.any.odin
       push:
-        - match: "}(;)+"
+        - match: "}((;))*"
           captures:
-            2: entity.name.type.enum.odin
+            1: entity.name.function.odin
+            2: keyword.operator.bound.odin
             3: keyword.operator.bound.odin
             4: storage.type.enum.odin
-            5: storage.type.any.odin
+            6: storage.type.any.odin
           pop: true
         - include: comment
         - include: number
+        - include: string
         - include: enum_field
+        - include: enum_comma
+  enum_comma:
+    - match: ","
+      scope: keyword.operator.bound.odin
   enum_field:
     - match: (\w+)\s*((,)|(=\s*))*
       captures:
@@ -179,8 +187,8 @@ contexts:
         1: variable.other.name.odin
         2: keyword.operator.comma.odin
   field_and_type:
-    - match: '([^ \t]+)\s*(\:)\s*(([^ \t]+)(,)|(\#type))'
-      comment: Need to fix field
+    - match: '(\w+)\s*(\:)\s*((\w+)(,){1,}|(\#type))'
+      comment: Is fixed?
       captures:
         1: variable.other.name.odin
         2: keyword.operator.seperator.odin
@@ -200,27 +208,26 @@ contexts:
           pop: true
         - include: main
   foreign_import:
-    - match: '(foreign)\s+(import)\s+(\w+)*\s*(\"(([^\t ]+)(:))*([^\t ]+)\")'
+    - match: '(foreign)\s+(import)\s+(\w+)*\s*(\"(([^\t: ]+)(:))*([^\n\t ]+)\")'
+      comment: "3 = { name = 'entity.name.type.odin'; };"
       captures:
         1: storage.modifier.foreign.odin
         2: keyword.control.import.odin
-        3: entity.name.type.odin
         4: string.quoted.double.odin
         6: string.quoted.double.odin
         7: keyword.operator.double_point.odin
         8: string.quoted.double.odin
   foreign_import_block:
-    - match: '(foreign)\s+(import)\s+(\w+)\s+({)*'
+    - match: '(foreign)\s+(import)\s+(\w+)\s+({)+'
+      comment: "3 = { name = 'entity.name.type.odin'; };"
       captures:
         1: storage.modifier.foreign.odin
         2: keyword.control.import.odin
-        3: entity.name.type.odin
       push:
         - match: "}"
           captures:
             1: storage.modifier.foreign.odin
             2: keyword.control.import.odin
-            3: entity.name.type.odin
           pop: true
         - include: string_char
         - include: string
@@ -336,9 +343,9 @@ contexts:
       scope: keyword.operator.same.odin
   package:
     - match: (package)\s+(\w+)(;)*
+      comment: "2 = { name = 'entity.name.section.package.odin'; };"
       captures:
         1: keyword.other.package.odin
-        2: entity.name.section.package.odin
         3: keyword.operator.scolon.odin
   return_type:
     - include: basic_return_type
@@ -356,7 +363,7 @@ contexts:
         - match: "'"
           pop: true
   struct:
-    - match: '((\w+))\s*(::)\s*(struct)\s*(\#packed\s*)*{'
+    - match: '((\w+))\s*(::)\s*(struct)\s*(\#packed\s*)*({)*'
       captures:
         2: entity.name.type.struct.odin
         3: keyword.operator.bound.odin

@@ -381,7 +381,7 @@
 				<key>4</key>
 				<dict>
 					<key>name</key>
-					<string>storage.modifier.uniqueness.odin</string>
+					<string>keyword.other.uniqueness.odin</string>
 				</dict>
 				<key>5</key>
 				<dict>
@@ -414,7 +414,7 @@
 				<key>4</key>
 				<dict>
 					<key>name</key>
-					<string>storage.modifier.uniqueness.odin</string>
+					<string>keyword.other.uniqueness.odin</string>
 				</dict>
 				<key>5</key>
 				<dict>
@@ -452,7 +452,7 @@
 				<key>4</key>
 				<dict>
 					<key>name</key>
-					<string>storage.modifier.uniqueness.odin</string>
+					<string>keyword.other.uniqueness.odin</string>
 				</dict>
 				<key>5</key>
 				<dict>
@@ -480,7 +480,7 @@
 				<key>3</key>
 				<dict>
 					<key>name</key>
-					<string>storage.modifier.uniqueness.odin</string>
+					<string>keyword.other.uniqueness.odin</string>
 				</dict>
 				<key>5</key>
 				<dict>
@@ -492,9 +492,14 @@
 					<key>name</key>
 					<string>storage.type.proc.odin</string>
 				</dict>
+				<key>7</key>
+				<dict>
+					<key>name</key>
+					<string>storage.type.odin</string>
+				</dict>
 			</dict>
 			<key>match</key>
-			<string>(\w*)\s*(::)\s*((distinct|opaque)\s*){0,1}(#type)*\s+(proc)*</string>
+			<string>(\w*)\s*(::)\s*((distinct|opaque)\s*){0,1}(#type)*\s+(proc)*(\w+)*(;)*</string>
 		</dict>
 		<key>constants_language</key>
 		<dict>
@@ -520,7 +525,7 @@
 				<key>3</key>
 				<dict>
 					<key>name</key>
-					<string>storage.modifier.uniquness.odin</string>
+					<string>keyword.other.uniqueness.odin</string>
 				</dict>
 			</dict>
 			<key>match</key>
@@ -536,13 +541,18 @@
 		<key>enum</key>
 		<dict>
 			<key>begin</key>
-			<string>((\w+))\s*(::)\s*(enum)\s*(\w*)\s*\{</string>
+			<string>(\w+)\s*(::)\s*(enum)\s*(\w*)\s*(\{)*</string>
 			<key>captures</key>
 			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>entity.name.function.odin</string>
+				</dict>
 				<key>2</key>
 				<dict>
 					<key>name</key>
-					<string>entity.name.type.enum.odin</string>
+					<string>keyword.operator.bound.odin</string>
 				</dict>
 				<key>3</key>
 				<dict>
@@ -554,14 +564,14 @@
 					<key>name</key>
 					<string>storage.type.enum.odin</string>
 				</dict>
-				<key>5</key>
+				<key>6</key>
 				<dict>
 					<key>name</key>
 					<string>storage.type.any.odin</string>
 				</dict>
 			</dict>
 			<key>end</key>
-			<string>}(;)+</string>
+			<string>}((;))*</string>
 			<key>patterns</key>
 			<array>
 				<dict>
@@ -574,9 +584,24 @@
 				</dict>
 				<dict>
 					<key>include</key>
+					<string>#string</string>
+				</dict>
+				<dict>
+					<key>include</key>
 					<string>#enum_field</string>
 				</dict>
+				<dict>
+					<key>include</key>
+					<string>#enum_comma</string>
+				</dict>
 			</array>
+		</dict>
+		<key>enum_comma</key>
+		<dict>
+			<key>match</key>
+			<string>,</string>
+			<key>name</key>
+			<string>keyword.operator.bound.odin</string>
 		</dict>
 		<key>enum_field</key>
 		<dict>
@@ -640,9 +665,9 @@
 				</dict>
 			</dict>
 			<key>comment</key>
-			<string>Need to fix field</string>
+			<string>Is fixed?</string>
 			<key>match</key>
-			<string>([^ \t]+)\s*(\:)\s*(([^ \t]+)(,)|(\#type))</string>
+			<string>(\w+)\s*(\:)\s*((\w+)(,){1,}|(\#type))</string>
 		</dict>
 		<key>foreign</key>
 		<dict>
@@ -685,11 +710,6 @@
 					<key>name</key>
 					<string>keyword.control.import.odin</string>
 				</dict>
-				<key>3</key>
-				<dict>
-					<key>name</key>
-					<string>entity.name.type.odin</string>
-				</dict>
 				<key>4</key>
 				<dict>
 					<key>name</key>
@@ -711,13 +731,15 @@
 					<string>string.quoted.double.odin</string>
 				</dict>
 			</dict>
+			<key>comment</key>
+			<string>3 = { name = 'entity.name.type.odin'; };</string>
 			<key>match</key>
-			<string>(foreign)\s+(import)\s+(\w+)*\s*(\"(([^\t ]+)(:))*([^\t ]+)\")</string>
+			<string>(foreign)\s+(import)\s+(\w+)*\s*(\"(([^\t: ]+)(:))*([^\n\t ]+)\")</string>
 		</dict>
 		<key>foreign_import_block</key>
 		<dict>
 			<key>begin</key>
-			<string>(foreign)\s+(import)\s+(\w+)\s+({)*</string>
+			<string>(foreign)\s+(import)\s+(\w+)\s+({)+</string>
 			<key>captures</key>
 			<dict>
 				<key>1</key>
@@ -730,12 +752,9 @@
 					<key>name</key>
 					<string>keyword.control.import.odin</string>
 				</dict>
-				<key>3</key>
-				<dict>
-					<key>name</key>
-					<string>entity.name.type.odin</string>
-				</dict>
 			</dict>
+			<key>comment</key>
+			<string>3 = { name = 'entity.name.type.odin'; };</string>
 			<key>end</key>
 			<string>}</string>
 			<key>patterns</key>
@@ -1175,17 +1194,14 @@
 					<key>name</key>
 					<string>keyword.other.package.odin</string>
 				</dict>
-				<key>2</key>
-				<dict>
-					<key>name</key>
-					<string>entity.name.section.package.odin</string>
-				</dict>
 				<key>3</key>
 				<dict>
 					<key>name</key>
 					<string>keyword.operator.scolon.odin</string>
 				</dict>
 			</dict>
+			<key>comment</key>
+			<string>2 = { name = 'entity.name.section.package.odin'; };</string>
 			<key>match</key>
 			<string>(package)\s+(\w+)(;)*</string>
 		</dict>
@@ -1224,7 +1240,7 @@
 		<key>struct</key>
 		<dict>
 			<key>begin</key>
-			<string>((\w+))\s*(::)\s*(struct)\s*(\#packed\s*)*{</string>
+			<string>((\w+))\s*(::)\s*(struct)\s*(\#packed\s*)*({)*</string>
 			<key>captures</key>
 			<dict>
 				<key>2</key>
