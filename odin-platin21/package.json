@@ -20,6 +20,10 @@
             "language": "odin",
             "scopeName": "source.odin",
             "path": "./syntaxes/odin.tmLanguage"
-        }]
+        }],
+        "snippets": [{
+				"language": "odin",
+				"path": "./snippets/snippets.json"
+		}]
     }
 }
